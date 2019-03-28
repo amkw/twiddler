@@ -6,19 +6,29 @@
   </head>
   <body>
     <script>
-
+// Generated tweets displayed in reverse chronological order
       $(document).ready(function(){
         var $body = $('body');
         $body.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+        var indexLow = 0;
+        var currIndex = streams.home.length - 1;
+
+        var showNewTweets = function () {
+          var currIndex = streams.home.length - 1;
+          while(currIndex >= indexLow){
+            console.log('I run after the page is ready');
+            var tweet = streams.home[currIndex];
+            var $tweet = $('<div></div>');
+            var timestamp = tweet.created_at;
+            $tweet.text('@' + tweet.user + ': ' + tweet.message + '' + timestamp);
+            $tweet.appendTo($body);
+            currIndex -= 1;
+          }
+          indexLow = streams.home.length;
+          setTimeout(showNewTweets, 1000);
         }
+        showNewTweets();
 
       });
 
