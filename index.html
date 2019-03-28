@@ -6,7 +6,7 @@
   </head>
   <body>
 
-    <button id="newTweetsBtn" type="refresh">See New Tweets</button>
+    <button id="newTweetsBtn">See New Tweets</button>
     <div class="tweetsBody"></div>
 
     <script>
@@ -18,37 +18,35 @@
         var viewedUser = '';
 
         // Main Page
-        var indexHigh = streams.home.length - 1;
         var currIndex = 0;
 
         var showNewTweets = function () {
           var indexHigh = streams.home.length - 1;
           while(currIndex <= indexHigh){
             var tweet = streams.home[currIndex];
-            var $tweet = $('<div></div>');
+            var $tweet = $('<div></div>').click((function(username) {
+              return function() {
+                viewedUser = username;
+                console.log(viewedUser);
+              }
+            })(tweet.user));
             var timestamp = tweet.created_at;
 
-            $tweet.text(/*'@' + tweet.user + ': ' + */tweet.message + '' + timestamp);
+            $tweet.text('@' + tweet.user + ': ' + tweet.message + '' + timestamp);
             $tweet.prependTo(".tweetsBody");
-
-            var userLink = $("<a>");
-                userLink.attr("href", "userPage.html");
-                // userLink.attr("title", "Google.com");
-                // userLink.attr("target", "_blank");
-                userLink.text('@' + tweet.user);
-                userLink.prependTo(".tweetsBody");
 
             currIndex += 1;
           }
           currIndex = streams.home.length;
         }
-        // When button element is clicked, show new tweets
+
+        // When new tweets button element is clicked, show new tweets
         $("#newTweetsBtn").click( function() {
           showNewTweets();
         });
 
         // Single User's Tweets
-        
+
 
       });
 
