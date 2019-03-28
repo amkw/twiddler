@@ -5,30 +5,50 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
+
+    <button id="newTweetsBtn" type="refresh">See New Tweets</button>
+    <div class="tweetsBody"></div>
+
     <script>
-// Generated tweets displayed in reverse chronological order
       $(document).ready(function(){
         var $body = $('body');
-        $body.html('');
+        //$body.html('');
 
-        var indexLow = 0;
-        var currIndex = streams.home.length - 1;
+        // Global variable
+        var viewedUser = '';
+
+        // Main Page
+        var indexHigh = streams.home.length - 1;
+        var currIndex = 0;
 
         var showNewTweets = function () {
-          var currIndex = streams.home.length - 1;
-          while(currIndex >= indexLow){
-            console.log('I run after the page is ready');
+          var indexHigh = streams.home.length - 1;
+          while(currIndex <= indexHigh){
             var tweet = streams.home[currIndex];
             var $tweet = $('<div></div>');
             var timestamp = tweet.created_at;
-            $tweet.text('@' + tweet.user + ': ' + tweet.message + '' + timestamp);
-            $tweet.appendTo($body);
-            currIndex -= 1;
+
+            $tweet.text(/*'@' + tweet.user + ': ' + */tweet.message + '' + timestamp);
+            $tweet.prependTo(".tweetsBody");
+
+            var userLink = $("<a>");
+                userLink.attr("href", "userPage.html");
+                // userLink.attr("title", "Google.com");
+                // userLink.attr("target", "_blank");
+                userLink.text('@' + tweet.user);
+                userLink.prependTo(".tweetsBody");
+
+            currIndex += 1;
           }
-          indexLow = streams.home.length;
-          setTimeout(showNewTweets, 1000);
+          currIndex = streams.home.length;
         }
-        showNewTweets();
+        // When button element is clicked, show new tweets
+        $("#newTweetsBtn").click( function() {
+          showNewTweets();
+        });
+
+        // Single User's Tweets
+        
 
       });
 
