@@ -1,55 +1,107 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
-  </head>
-  <body>
+</head>
 
+<body>
     <button id="newTweetsBtn">See New Tweets</button>
     <div class="tweetsBody"></div>
-
     <script>
-      $(document).ready(function(){
+    $(document).ready(function() {
         var $body = $('body');
-        //$body.html('');
 
         // Global variable
         var viewedUser = '';
 
-        // Main Page
+        // Main Page of all tweets
         var currIndex = 0;
 
-        var showNewTweets = function () {
-          var indexHigh = streams.home.length - 1;
-          while(currIndex <= indexHigh){
-            var tweet = streams.home[currIndex];
-            var $tweet = $('<div></div>').click((function(username) {
-              return function() {
-                viewedUser = username;
-                console.log(viewedUser);
-              }
-            })(tweet.user));
-            var timestamp = tweet.created_at;
+        var showNewTweets = function() {
+            var indexHigh = streams.home.length - 1;
+            while (currIndex <= indexHigh) {
+                var tweet = streams.home[currIndex];
+                var $tweet = $('<div class="tweet"></div>').css({
+                  "padding": "10px 0",
+                  "border-bottom": "1px solid #000",
+                  "font-family": "Arial"}).click((function(username) {
+                    return function() {
+                        viewedUser = username;
+                        console.log(viewedUser);
+                        showViewedUserTweets();
+                    }
+                })(tweet.user));
+                var tweetUser = tweet.user;
+                var $tweetUser = $("<div></div>").text("@" + tweetUser).css({
+                  "font-weight": "bold",
+                  "color": "goldenrod",
+                  "font-size": "14px"}).appendTo($tweet);
+                var message = tweet.message;
+                var $message = $("<div></div>").text(message).css({
+                  "font-size": "18px",
+                  "margin": "5px 0"}).appendTo($tweet);
+                var timestamp = tweet.created_at;
+                var $timestamp = $("<div></div>").text(timestamp).css({
+                  "font-size": "10px",
+                  "color": "gray"}).appendTo($tweet);
 
-            $tweet.text('@' + tweet.user + ': ' + tweet.message + '' + timestamp);
-            $tweet.prependTo(".tweetsBody");
+                $tweet.prependTo(".tweetsBody");
 
-            currIndex += 1;
-          }
-          currIndex = streams.home.length;
+                currIndex += 1;
+            }
+            currIndex = streams.home.length;
         }
 
         // When new tweets button element is clicked, show new tweets
-        $("#newTweetsBtn").click( function() {
-          showNewTweets();
+        $("#newTweetsBtn").click(function() {
+            showNewTweets();
         });
 
-        // Single User's Tweets
+        // Page of selected author's tweets
+        var showViewedUserTweets = function() {
+            $("#newTweetsBtn").remove();
+            $(".tweetsBody").children().remove();
+            var index = streams.users[viewedUser].length - 1;
 
+            for (index; index >= 0; index--) {
+                var tweet = streams.users[viewedUser][index];
+                var $tweet = $('<div class="tweet"></div>').css({
+                  "padding": "10px 0",
+                  "border-bottom": "1px solid #000",
+                  "font-family": "Arial"})
 
-      });
-
+                var tweetUser = tweet.user;
+                var $tweetUser = $("<div></div>").text("@" + tweetUser).css({
+                  "font-weight": "bold",
+                  "color": "goldenrod",
+                  "font-size": "14px"}).appendTo($tweet);
+                var message = tweet.message;
+                var $message = $("<div></div>").text(message).css({
+                  "font-size": "18px",
+                  "margin": "5px 0"}).appendTo($tweet);
+                var timestamp = tweet.created_at;
+                var $timestamp = $("<div></div>").text(timestamp).css({
+                  "font-size": "10px",
+                  "color": "gray"}).appendTo($tweet);
+                $tweet.appendTo(".tweetsBody");
+            }
+        }
+        // Button CSS styling
+        $("#newTweetsBtn").css({
+            "background-color": "gray",
+            "font-size": "15px",
+            "padding": "15px",
+            "margin": "10px 0",
+            "font-family": "Arial",
+            "border-radius": "7px",
+            "border": "none",
+            "color": "rgb(255, 255, 255)",
+            "font-weight": "bold",
+        });
+    });
     </script>
-  </body>
+</body>
+
 </html>
